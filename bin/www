@@ -91,5 +91,5 @@ function onListening() {
     var content = JSON.parse(data)
     process.env.API_KEY = content.apiKey
   });
-  console.log('started application on ');
+  console.log('started application on ' + process.env.NGET_PORT);
 }
