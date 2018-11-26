@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nget
+  namespace: dev
+  labels:
+    app: nget
+    env: dev
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      name: http
+      targetPort: http-port
+  selector:
+    app: online-query
+    env: dev

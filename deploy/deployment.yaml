@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nget-app
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  labels:
+    app: nget
+  namespace: dev
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nget
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kubernetes.io/change-cause: "v1.0.0 first deployment"
+      labels:
+        app: nget
+        env: dev
+    spec:
+      volumes:
+        - name: nget-secrets-vol
+          secret:
+            secretName: nget-secrets
+            items:
+              - key: apiKey
+                path: apiKey.json
+                mode: 0755
+      containers:
+        - image: ichandan/nget:1.0.2
+          name: nget
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http-port
+          volumeMounts:
+            - mountPath: /secret
+              name: nget-secrets-vol
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http-port
+            initialDelaySeconds: 5
+            periodSeconds: 20
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http-port
+            initialDelaySeconds: 5
+            periodSeconds: 20
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 5

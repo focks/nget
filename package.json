@@ -4,6 +4,7 @@
   "description": "get news by category",
   "main": "app.js",
   "scripts": {
+    "start": "node bin/www",
     "test": "test"
   },
   "author": "cskkman@gmail.com",

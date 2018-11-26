@@ -16,13 +16,13 @@ var app = express();
 app.use(logger('dev'));
 app.use(express.json());
 
-// app.use(queryMiddleware);
-app.use('/', router);
-
 // will be used for health checkup. if main process dies kubernetes will restart the container
 app.use('/health', (req, res, next) => {
   res.json({status: "ok"})
 });
+
+// app.use(queryMiddleware);
+app.use('/', router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
